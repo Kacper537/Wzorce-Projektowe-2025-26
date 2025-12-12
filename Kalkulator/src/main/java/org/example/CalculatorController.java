@@ -1,14 +1,22 @@
 package org.example;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class CalculatorController {
     private final CalculatorModel model;
     private final CalculatorView view;
+    private final MyGraphicsView graphicsView;
 
     public CalculatorController(CalculatorModel model, CalculatorView view) {
         this.model = model;
         this.view = view;
+        this.graphicsView = new MyGraphicsView();
+        JFrame frame = new JFrame("Widok graficzny");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(graphicsView);
+        frame.setSize(300, 150);
+        frame.setVisible(true);
 
         view.button_0.addActionListener(this::buttonPressed);
         view.button_1.addActionListener(this::buttonPressed);
@@ -58,6 +66,7 @@ public class CalculatorController {
         try {
             double result = model.calculate(model.getFirstNumber(), secondNumber, model.getOperator());
             view.screen.setText(String.valueOf(result));
+            graphicsView.setText(String.valueOf(result));
             model.setFirstNumber(result);
             model.setOperator("");
         } catch (ArithmeticException ex) {
