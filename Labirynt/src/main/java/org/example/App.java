@@ -13,6 +13,7 @@ public class App extends JFrame
 {
     private JMyPanel panel;  // do wyświetlenia labiryntu przy pomocy Image
     private Image image; // obiekt, na którym rysujemy labirynt
+    private Maze maze;
 
     public App() {
         setSize(600, 300);  // rozmiar okna aplikacji
@@ -24,16 +25,55 @@ public class App extends JFrame
             public void actionPerformed(ActionEvent e) {
                 image = panel.getImage();
 //                drawMaze();
-                drawMazesUsingBuilder();
+                drawMazeFactory();
+                //drawMazesUsingBuilder();
                 panel.repaint();   // odświeżenie panelu - odrysowanie labiryntu
             }
         });
+        JButton buttonDet = new JButton("Detonation"); // przycisk detonacji
+        buttonDet.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                image = panel.getImage();
+                drawBombedMaze();
+                panel.repaint();   // odświeżenie panelu - odrysowanie labiryntu
+            }
+        });
+
         setLayout((new BorderLayout())); // ustawiamy menedżera rozkładu dla JFrame
-        JPanel menuPanel = new JPanel(new GridLayout(1, 1)); // panel z przyciskami
+        JPanel menuPanel = new JPanel(new GridLayout(1, 2)); // panel z przyciskami
         menuPanel.add(button);
+        menuPanel.add(buttonDet);
         add(menuPanel, "North"); // wstawiamy panel z przyciskiem na górze aplikacji
         add(panel, BorderLayout.CENTER);
 
+    }
+
+    public void drawBombedMaze(){
+        if (image == null) image = panel.getImage();
+        if (maze == null) return;
+        Graphics g = image.getGraphics();
+        g.clearRect(0, 0, image.getWidth(this), image.getHeight(this));
+        for (int i = 0; i < maze.size(); i++){
+            MapSite roomObj = maze.getRoomAt(i);
+            if (roomObj instanceof RoomWithBomb) {
+                RoomWithBomb room = (RoomWithBomb) roomObj;
+                room.setDetonated();
+            }
+        }
+        maze.draw(image);
+        panel.repaint();
+    }
+
+    public void drawMazeFactory(){
+        int x = 50;
+        int y = 100;
+        int nr = 1;
+
+        MazeFactory mazeFactory = new BombedMazeFactory(x, y);
+        this.maze = mazeFactory.createMaze();
+        if (image == null) image = panel.getImage();
+        if (this.maze != null) this.maze.draw(image);
     }
 
     public void drawMaze() {
@@ -41,6 +81,9 @@ public class App extends JFrame
         wall.setX(50);
         wall.setY(100);
         //wall.draw(image);
+        int x = 50;
+        int y = 100;
+        int nr = 1;
 
         Room room1 = new Room(1,50,100);
         room1.setSide(Directions.North, new Wall(Directions.North));
@@ -124,8 +167,8 @@ public class App extends JFrame
 
     public void drawMazesUsingBuilder() {
         Director director = new Director();
-        MazeBuilder builder1 = new ConcreateBuilderLevel1();
-        MazeBuilder builder2 = new ConcreateBuilderLevel1();
+        MazeBuilder builder1 = new ConcreteBuilderLevel1();
+        MazeBuilder builder2 = new ConcreteBuilderLevel1();
 
         image = panel.getImage();
 

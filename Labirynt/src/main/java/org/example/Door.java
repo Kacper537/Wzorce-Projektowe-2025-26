@@ -9,6 +9,10 @@ public class Door extends MapSite{
     private Room roomTwo;
     private boolean isHorizontal;
 
+    public boolean getHorizontal(){
+        return isHorizontal;
+    }
+
     public Door(Room r1, Room r2, boolean isOpen){
         super(-1,-1);
         this.isOpen = isOpen;

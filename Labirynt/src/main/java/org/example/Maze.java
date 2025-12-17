@@ -9,6 +9,19 @@ public class Maze {
         maze = new ArrayList<>();
     }
 
+    public int size(){
+        return maze.size();
+    }
+
+    public Room getRoomAt(int index){
+        if (index < maze.size()){
+            return maze.get(index);
+        }
+        else{
+            return null;
+        }
+    }
+
     public void addRoom(Room room){
         maze.add(room);
     }

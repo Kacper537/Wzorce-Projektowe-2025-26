@@ -16,6 +16,10 @@ public class Wall extends MapSite {
 
     private Directions direction;
 
+    public Directions getDirection(){
+        return direction;
+    }
+
     @Override
     public void draw(Image image) {
         super.draw(image);
@@ -34,7 +38,7 @@ public class Wall extends MapSite {
             default:
                 break;
         }
-        System.out.println("x = " + getX() + ", y = " + getY());
+        // debug print removed
 
 
     }
